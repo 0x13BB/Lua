@@ -19,12 +19,7 @@ if SERVER then
     
         h   = holograms.create(Epos + Vector (0,0,40), Eang , "models/holograms/icosphere2.mdl" , Vector(30))  
         h1  = holograms.create(Epos + Vector (0,0,40), Eang , "models/holograms/icosphere2.mdl" , Vector(-30)) 
-        
        
-        
-        --h   = prop.create(Epos + Vector (0,0,40), Eang , "models/holograms/icosphere2.mdl" , 1)  
-        --h1  = prop.create(Epos + Vector (0,0,40), Eang , "models/holograms/icosphere2.mdl" , 1) 
-         
         h:setMaterial( "models/wireframe" )
         h1:setMaterial( "models/wireframe" )
         h:setParent( E )
@@ -90,8 +85,6 @@ if SERVER then
         return c
     end
     
-
-
     function mainLoop() 
     
         Epos = E:getPos()
@@ -101,13 +94,9 @@ if SERVER then
         local ArrayGre = {}
         local ent
         local str = "1"
-        --local Array   = find.allPlayers()
-        --local ArrayGre = find.byClass("crossbow_bolt")
-        
         local ArrayGre = find.inSphere(Epos,400)
         
         for cvk, cvv in pairs(ArrayGre) do
-        --print(ArrayGre[cvk]:getClass())
         
             if  ArrayGre[cvk]:getClass() == "prop_physics"  or 
                 ArrayGre[cvk]:getClass() == "crossbow_bolt" or
@@ -118,78 +107,44 @@ if SERVER then
                 ArrayGre[cvk]:getClass() == "prop_combine_ball" or
                 ArrayGre[cvk]:getClass() == "acf_missle" or
                 ArrayGre[cvk]:getClass() == "npc_satchel" 
-                
-                
-                
+    
                 then
-                    
-                
-                else 
+                else          
 
-                
                 ArrayGre[cvk] = nil
-                
             end
         end
              
-       
-        
-        
-        --str = "gre".. #ArrayGre .. "\n" .. #ArrPos 
-        
-        --print(str)
-        
-        
-       
         for k , v in pairs(ArrayGre) do
+    
+            ArrPos[k] = RSI(v:getPos(), v:getVelocity(),Epos + Vector(0,0,40),200)
+        
+            if prop.canSpawn() then
             
-            --if v != owner() then
-                ArrPos[k] = RSI(v:getPos(), v:getVelocity(),Epos + Vector(0,0,40),200)
-                   
+                if ArrPos[k] ~= nil  then 
+                                                            
+                    ent = holo(k, ArrPos[k], (ArrPos[k] - Epos -Vector(0,0,40)):getAngle()  +Angle(90,0,0) , "models/hunter/plates/plate1x1.mdl" , 1 )                    
                     
+                else
                 
-                --ArrPos[k] = RSI(v:getEyePos(), v:getEyeTrace().HitPos - v:getEyePos() ,Epos + Vector (0,0,40),95)
-                
-                
-                
-                
-                
-                if prop.canSpawn() then
-                
-                    if ArrPos[k] ~= nil  then 
-                                                                 
-                        --holo(k, ArrPos[k], v:getEyeAngles()+Angle(90,0,0) , "models/hunter/plates/plate1x1.mdl" , 1 )
-                        ent = holo(k, ArrPos[k], (ArrPos[k] - Epos -Vector(0,0,40)):getAngle()  +Angle(90,0,0) , "models/hunter/plates/plate1x1.mdl" , 1 )
-                         
-                           
-                    else
+                    if ent~= nil then
                     
-                        if ent~= nil then
-                        
-                            ent:remove()
-                            
-                            
-                             
+                        ent:remove()
+        
+                    end
+                    
+                    
+                    for ck , cv in pairs(arr) do 
+                        if isValid(arr[ck]) then   
+                            arr[ck]:remove()
+                            arr[ck] = nil
                         end
-                        
-                        
-                        for ck , cv in pairs(arr) do 
-                    if isValid(arr[ck]) then   
-                      arr[ck]:remove()
-                      arr[ck] = nil
-                    end
                     end   
-                        
-                                                 
-                        holoRemove(k)
-                          
-                                     
-                    end
-                    
-                    
-                            
-                    
-                --end                
+                                            
+                    holoRemove(k)
+                               
+                end
+             
             end
                        
             if Count(ArrPos) > 0 then  
@@ -203,12 +158,7 @@ if SERVER then
                 h:setMaterial("models/wireframe") 
                 h1:setColor(Color(0,255,0))
                 h:setColor(Color(0,255,0))
-               
-                      
-                        
-                
-            
-                 
+
             end
         end
     end
