@@ -5,9 +5,6 @@
 
 if SERVER then
 
---wire.adjustOutputs({ "A" }, { "String"})
-
-
 function firstLoop()
 
     E = chip()
@@ -27,14 +24,10 @@ function mainLoop()
     Y = P:getPos()[2]-E:getPos()[2]
     Dd = D*math.abs(D)
     
-    
-    
     Pvel = P:getVelocity()
     Fvec = Vector(0, 0, 1)*Dd
     PangVel = P:getAngleVelocityAngle()
     Pang = P:getAngles(  )
-    
-    
     
     P:applyAngForce(-PangVel*10)
     P:applyAngForce(-Pang*30)
@@ -43,28 +36,19 @@ function mainLoop()
     P:applyForceCenter(Vector(0-X, -30-Y, 0)*50)
     
     G = Dd / P:getMass()
-    
-    --wire.ports.A = tostring(G)
-    
 
-    
-    
     net.start("G")
     net.writeFloat(G)
     net.send()
     
-    
-   
 end
 
 hook.add("Think", "Mainloop", mainLoop)
-
 
 else
 
 local G
 local font = render.createFont("Default", 60)
-
 
     net.receive("G", function ()
     G = net.readFloat()
@@ -77,7 +61,6 @@ hook.add("render", "helloworld_render", function ()
     render.drawText(0, 196, tostring(G))
 
 end)
-
 
 end
 
